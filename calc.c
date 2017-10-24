@@ -3,14 +3,12 @@
 #include "calc.h"
 #include "char.h"
 
-void read_expression(){
-	char expressao[101], operador;
+int read_expression(char* expressao){
+
+	char operador;
 	int i, flag_true;
 	flag_true = 1;
 	i = 0;
-	printf("Informe a expressao na forma infixa: ");
-	scanf("%[^\n]s", expressao);
-	getchar();
 	t_pilha* pilha = aloca_pilha();
 	while(expressao[i] != '\0' && flag_true == 1){
 		if(expressao[i] == '(' || expressao[i] == '[' || expressao[i] == '{'){
@@ -35,13 +33,13 @@ void read_expression(){
 		}//Condicional para ver o operador de final
 		i++;
 	}
-	printf("\nA expressao");
+	
 	if(flag_true == 0 || !pilha_vazia(pilha)){
-		printf(" nao eh valida\n");
+		return 0;
+		//retornar pro menu
 	}
 	else{
-		printf(" eh valida\n");
+		return 1;
+		//retonar a expressao e continuar
 	}
-	libera_pilha(pilha);
-	pilha = NULL;
 }
