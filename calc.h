@@ -4,5 +4,6 @@
 
 int read_expression(char* expressao);
 void infixa_to_posfixa(char* expressao);
+int prioridade(char* expressao, t_pilha* pilha, int counter);
 
 #endif
