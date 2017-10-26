@@ -20,7 +20,7 @@ int main(){
 		printf("A expressao eh valida\n");
 	}
 
-	infixa_to_posfixa(expressao);
+	
 
 	return 0;
 }
