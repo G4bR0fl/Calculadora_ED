@@ -1,9 +1,10 @@
 #ifndef __CHAR_H__
 #define __CHAR_H__
+#include <math.h>
 
 typedef struct elemento{
 	struct elemento* ant;
-	int dado;
+	float dado;
 }t_ele;
 
 typedef struct {	
@@ -11,9 +12,9 @@ typedef struct {
 }t_pilha;
 
 t_pilha* aloca_pilha();
-t_ele* aloca_elemento(int valor);
+t_ele* aloca_elemento(float valor);
 
-void push(t_pilha* pilha, int valor);
+void push(t_pilha* pilha, float valor);
 int pop(t_pilha* pilha);
 int pilha_vazia(t_pilha* pilha);
 int tam_pilha(t_pilha* pilha);
