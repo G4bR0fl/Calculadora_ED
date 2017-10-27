@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "char.h"
+#include <math.h>
 
 
 t_pilha* aloca_pilha(){
@@ -9,7 +10,7 @@ t_pilha* aloca_pilha(){
 	return ptr;
 }
 
-t_ele* aloca_elemento(int valor){
+t_ele* aloca_elemento(float valor){
 	t_ele* ptr = (t_ele *) malloc(sizeof(t_ele));
 	ptr->dado = valor;
 	ptr->ant = NULL;
@@ -18,7 +19,7 @@ t_ele* aloca_elemento(int valor){
 }
 
 
-void push(t_pilha* pilha, int valor){
+void push(t_pilha* pilha, float valor){
 
 	t_ele* elemento = aloca_elemento(valor);
 	if(pilha_vazia(pilha)){
@@ -65,12 +66,9 @@ void print_pilha(t_pilha* pilha){
 		printf("Pilha vazia!");
 	}
  	while(aux != NULL){
-		printf("%d <- ", pilha->topo->dado);
-		pilha->topo = pilha->topo->ant;
-
+		printf("%f\n", aux->dado);
 		aux = aux->ant;
 	}
-	printf(" NULL\n");
 }
 
 void libera_pilha(t_pilha* pilha){
