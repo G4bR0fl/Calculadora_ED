@@ -3,6 +3,7 @@
 #include "calc.h"
 #include "char.h"
 #include <string.h>
+#include <math.h>
 
 int read_expression(char* expressao){
 
@@ -183,11 +184,202 @@ void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer
 
 void modo_calc(){
 	t_pilha* pilha = aloca_pilha();
-	printf("Modo Calculadora\n");
+	char check[100];
+	float numero_final, mult, operacao_pilha = 0;
+	int i = 0, size = 0, dec = 0, counter_dec = 0, size_mult_dec , size_mult_int;
+	printf("Modo Calculadora:\n");
 	if(pilha_vazia(pilha)){
-		printf("Pilha Vazia!");
+		printf("Pilha Vazia!\n");
 	}
+
+	printf("Informe um valor('0' para sair ou pressione 'space'): ");
+	scanf("%[^\n]s", check);
+	getchar();
+		for(i = 0; i <= strlen(check); i++){
+			if(check[0] == ' ' || check[0] == '0'){
+				printf("Usuario digitou space ou 0\n");
+				libera_pilha(pilha);
+				pilha = NULL;
+				exit(0);
+			}
+		}			
+
+	while(check[0] == '+' || check[0] == '-' || check[0] == '*' || check[0] == '/'){
+		printf("Numero insuficiente de operandos!\n");
+		printf("Informe um valor('0' ou space para sair): ");
+		scanf("%[^\n]s", check);
+		getchar();
+		if(check[0] == ' ' || check[0] == '0'){
+			printf("Usuario digitou space ou 0\n");
+			libera_pilha(pilha);
+			pilha = NULL;
+			exit(0);
+		}
+	}
+
+
+	for(i = 0; i < strlen(check); i++){
+		if(check[i] == '.'){
+			dec = 1; 
+			break;
+		}
+		else{
+			counter_dec++;
+		}
+	}
+	numero_final = 0;
+	size_mult_int = counter_dec -1;
+	size_mult_dec = ((counter_dec+1) - strlen(check));
+	//Transformacao de char pra double:
+	for(i = 0; i < strlen(check); i++){
+		if(check[i] != '.'){
+			if(size_mult_int >= 0){
+				mult = pow(10, size_mult_int);
+				size_mult_int--;
+			}
+			else{
+				mult = pow(10, size_mult_dec);
+				size_mult_dec--;
+			}
+			numero_final += ((float)check[i] - 48) * mult;
+		}
+	}
+
+	while(check[0] != '0'){
+		if(check[0] != '+' && check[0] != '-' && check[0] != '*' && check[0] != '/' && check[1] != '!'){
+			push(pilha, numero_final);
+			size++;
+			printf("Topo: ");
+			print_pilha(pilha);
+		}
+		numero_final = 0;
+		mult = 0;
+		counter_dec = 0;
+		printf("Informe um valor('0' ou 'space' para sair), ou um operador: ");
+		scanf("%[^\n]s", check);
+		getchar();
+		if(check[0] == '0' || check[0] == ' '){
+			printf("O usuario encerrou.\n");
+			libera_pilha(pilha);
+			pilha = NULL;
+			exit(0);
+		}
+
+		if(size < 2 && ((check[0] == '+') || (check[0] == '-') || (check[0] == '*') || (check[0] == '/')) ){
+			printf("Numero de operandos insuficientes!\n");
+			do
+			{	
+				printf("Informe um valor('0' ou 'space' para sair): ");
+				scanf("%[^\n]s", check);
+				getchar();
+				if(check[0] == '0' || check[0] == ' '){
+					printf("O usuario encerrou.\n");
+					libera_pilha(pilha);
+					exit(0);
+				}
+			} while (check[0] == '+' || check[0] == '-' || check[0] == '*' || check[0] == '/');
+		}
+
+		if(check[0] != '+' && check[0] != '-' && check[0] != '*' && check[0] != '/' && check[0] != 'c' ){
+				for(i = 0; i < strlen(check); i++){
+				if(check[i] == '.'){
+					dec = 1; 
+					break;
+				}
+				else{
+					counter_dec++;
+				}
+			}
+			size_mult_int = counter_dec -1;
+			size_mult_dec = ((counter_dec+1) - strlen(check));
+			//Transformacao de char pra double:
+			for(i = 0; i < strlen(check); i++){
+				if(check[i] != '.'){
+					if(size_mult_int >= 0){
+						mult = pow(10, size_mult_int);
+						size_mult_int--;
+					}
+					else{
+						mult = pow(10, size_mult_dec);
+						size_mult_dec--;
+					}
+					numero_final += ((float)check[i] - 48) * mult;
+				}
+			}
+		}
+		else{
+			if(check[0] == '+' && check[1] != '!'){
+				operacao_pilha = pop(pilha);
+				operacao_pilha += pilha->topo->dado;
+				pilha->topo->dado = operacao_pilha;
+				print_pilha(pilha);
+				size--;
+				operacao_pilha = 0;
+			}
+			if(check[0] == '-' && check[1] != '!'){
+				operacao_pilha = pop(pilha);
+				operacao_pilha -= pilha->topo->dado;
+				pilha->topo->dado = operacao_pilha;
+				print_pilha(pilha);
+				size--;
+				operacao_pilha = 0;
+			}
+			if(check[0] == '*' && check[1] != '!'){
+				operacao_pilha = pop(pilha);
+				operacao_pilha *= pilha->topo->dado;
+				pilha->topo->dado = operacao_pilha;
+				print_pilha(pilha);
+				size--;
+				operacao_pilha = 0;
+			}
+			if(check[0] == '/'){
+				operacao_pilha = pop(pilha);
+				operacao_pilha /= pilha->topo->dado;
+				pilha->topo->dado = operacao_pilha;
+				print_pilha(pilha);
+				size--;
+				operacao_pilha = 0;
+			}
+			if(check[0] == '+' && check[1] == '!'){
+				while(!pilha_vazia(pilha)){
+					operacao_pilha += pop(pilha);
+					size = 0;
+				}
+				push(pilha, operacao_pilha);
+				size++;
+				printf("Topo: ");
+				print_pilha(pilha);
+				operacao_pilha = 0;
+			}
+			if(check[0] == '-' && check[1] == '!'){
+				operacao_pilha += pop(pilha);
+				while(!pilha_vazia(pilha)){
+					operacao_pilha -= pop(pilha);
+					size = 0;
+				}
+				push(pilha, operacao_pilha);
+				size++;
+				printf("Topo: ");
+				print_pilha(pilha);
+				operacao_pilha = 0;
+			}
+			if(check[0] == '*' && check[1] == '!'){
+				operacao_pilha += pop(pilha);
+				while(!pilha_vazia(pilha)){
+					operacao_pilha *= pop(pilha);
+					size = 0;
+				}
+				push(pilha, operacao_pilha);
+				size++;
+				printf("Topo: ");
+				print_pilha(pilha);
+				operacao_pilha = 0;
+			}
+		}
+	}
+	exit(0);
 }
+
 
 int menu(){
 	int mode;
@@ -196,4 +388,6 @@ int menu(){
 	printf("0- Para sair\n");
 	printf("Escolha um modo: ");
 	scanf("%d", &mode);
+	getchar();
+	return mode;
 }
