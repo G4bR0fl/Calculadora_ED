@@ -182,7 +182,7 @@ void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer
 	printf("Infixa: %s\nPosfixa: %s\n", expressao, str_aux);
 }
 
-void modo_calc(){
+int modo_calc(){
 	t_pilha* pilha = aloca_pilha();
 	char check[100];
 	float numero_final, mult, operacao_pilha = 0;
@@ -196,11 +196,11 @@ void modo_calc(){
 	scanf("%[^\n]s", check);
 	getchar();
 		for(i = 0; i <= strlen(check); i++){
-			if(check[0] == ' ' || check[0] == '0'){
+			if((check[0] == ' ' || check[0] == '0') && strlen(check) == 1){
 				printf("Usuario digitou space ou 0\n");
 				libera_pilha(pilha);
 				pilha = NULL;
-				exit(0);
+				return 100;
 			}
 		}			
 
@@ -209,11 +209,11 @@ void modo_calc(){
 		printf("Informe um valor('0' ou space para sair): ");
 		scanf("%[^\n]s", check);
 		getchar();
-		if(check[0] == ' ' || check[0] == '0'){
+		if((check[0] == ' ' || check[0] == '0') && strlen(check) == 1){
 			printf("Usuario digitou space ou 0\n");
 			libera_pilha(pilha);
 			pilha = NULL;
-			exit(0);
+			return 100;
 		}
 	}
 
@@ -258,11 +258,11 @@ void modo_calc(){
 		printf("Informe um valor('0' ou 'space' para sair), ou um operador: ");
 		scanf("%[^\n]s", check);
 		getchar();
-		if(check[0] == '0' || check[0] == ' '){
+		if((check[0] == '0' || check[0] == ' ') && strlen(check) == 1){
 			printf("O usuario encerrou.\n");
 			libera_pilha(pilha);
 			pilha = NULL;
-			exit(0);
+			return 100;
 		}
 
 		if(size < 2 && ((check[0] == '+') || (check[0] == '-') || (check[0] == '*') || (check[0] == '/')) ){
@@ -275,7 +275,7 @@ void modo_calc(){
 				if(check[0] == '0' || check[0] == ' '){
 					printf("O usuario encerrou.\n");
 					libera_pilha(pilha);
-					exit(0);
+					return 100;
 				}
 			} while (check[0] == '+' || check[0] == '-' || check[0] == '*' || check[0] == '/');
 		}
@@ -377,7 +377,7 @@ void modo_calc(){
 			}
 		}
 	}
-	exit(0);
+	return 100;
 }
 
 
