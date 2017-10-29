@@ -71,8 +71,8 @@ int prioridade(char* expressao, t_pilha* pilha, int counter){
 	}
 }
 
-void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer e mudar o tipo pra retornar str_aux*/
-	char str_aux[101];//teste com str estatica
+int infixa_to_posfixa(char* expressao) { /*Incompleta, ainda muita coisa a fazer e mudar o tipo pra retornar str_aux*/
+	char str_aux[303];//teste com str estatica
 	int prio_ant = 0;
 	t_pilha* pilha = aloca_pilha(); 
 	int i = 0, j = 0, k = 0;
@@ -164,12 +164,8 @@ void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer
 								k++;
 							}
 						}
+
 						if(expressao[i] == '\0'){
-							printf("str_aux: %s\n", str_aux);			
-							str_aux[j] = '\0';
-							while(k != i){
-								k++;
-							}
 							break;
 						}
 					}
@@ -177,7 +173,8 @@ void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer
 			}
 		}
 	}
-
+	str_aux[j] = '\0';
+	printf("Posfixa: %s\n", str_aux);
 }
 
 int modo_calc(){
