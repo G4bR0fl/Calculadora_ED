@@ -66,7 +66,7 @@ void print_pilha(t_pilha* pilha){
 		printf("Pilha vazia!");
 	}
  	while(aux != NULL){
-		printf("%f\n", aux->dado);
+		printf("%.2f\n", aux->dado);
 		aux = aux->ant;
 	}
 }
