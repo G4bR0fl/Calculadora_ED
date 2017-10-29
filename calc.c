@@ -73,7 +73,7 @@ int prioridade(char* expressao, t_pilha* pilha, int counter){
 
 void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer e mudar o tipo pra retornar str_aux*/
 	char str_aux[101];//teste com str estatica
-	int prio_ant;
+	int prio_ant = 0;
 	t_pilha* pilha = aloca_pilha(); 
 	int i = 0, j = 0, k = 0;
 	while(expressao[k] != '\0'){
@@ -144,9 +144,6 @@ void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer
 			{
 				push(pilha, expressao[i]);
 				i++;
-				k++;
-				j++;
-				//prio_op = prioridade(expressao, pilha, i);
 			}
 			else{
 				if( (prioridade(expressao, pilha, i) == 5 && !pilha_vazia(pilha)) || (prioridade(expressao, pilha, i) == 4 && !pilha_vazia(pilha)) || (prioridade(expressao, pilha, i) == 3 && !pilha_vazia(pilha)) ){
@@ -156,30 +153,31 @@ void infixa_to_posfixa(char* expressao){ /*Incompleta, ainda muita coisa a fazer
 				}
 				else{
 					if(expressao[i] == ')' || expressao[i] == ']' || expressao[i] == '}'){
-						while((char)pilha->topo->dado == '*' || (char) pilha->topo->dado == '/' || (char) pilha->topo->dado == '+' || (char) pilha->topo->dado == '-'){
+						i++;
+						while(!pilha_vazia(pilha)){
 							if((char) pilha->topo->dado == '(' || (char) pilha->topo->dado == '[' || (char) pilha->topo->dado == '{'){
 								pop(pilha);
-								if(!pilha_vazia(pilha)){
-									while(!pilha_vazia(pilha)){
-										str_aux[j] = pop(pilha);
-										j++;
-										k++;
-									}
-								}
-								break;
 							}
+							else{
 								str_aux[j] = pop(pilha);
 								j++;
 								k++;
+							}
+						}
+						if(expressao[i] == '\0'){
+							printf("str_aux: %s\n", str_aux);			
+							str_aux[j] = '\0';
+							while(k != i){
+								k++;
+							}
+							break;
 						}
 					}
 				}
 			}
-
 		}
 	}
-	str_aux[k] = '\0';
-	printf("Infixa: %s\nPosfixa: %s\n", expressao, str_aux);
+
 }
 
 int modo_calc(){
