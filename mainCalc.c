@@ -15,26 +15,27 @@ int main(){//fazer um while grande pra so sair dado um return das 3 funcoes
 			printf("Informe a expressao na forma infixa: ");
 			scanf("%[^\n]s", expressao);
 			getchar();
-			read_expression(expressao);
+			receiver = read_expression(expressao);
 
-			if(read_expression(expressao) == 0){
+			if(receiver == 0){
 				printf("A expressao nao eh valida\n");
+				break;
 			}
-			if(read_expression(expressao) == 1){
+			if(receiver == 1){
 				printf("A expressao eh valida\n");
 			}
 
 			receiver = infixa_to_posfixa(expressao);
 
 			if(receiver == 1){
-				menu();
+				mode = menu();
 			}
 
 		}
 		if(mode == 2){
 			modo_calc();
 			if(modo_calc() == 100){
-				menu();
+				mode = menu();
 			}
 		}
 

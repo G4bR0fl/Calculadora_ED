@@ -39,12 +39,14 @@ int read_expression(char* expressao){
 	if(flag_true == 0 || !pilha_vazia(pilha)){
 		libera_pilha(pilha);
 		pilha = NULL;
-		return 0;/*Verificar na compilacao se ta certo essas 5 linhas*/
+		return 0;
 		//retornar pro menu e esvaziar a pilha
 	}
 	else{
+		libera_pilha(pilha);
+		pilha = NULL;
 		return 1;
-		//retonar a expressao e continuar
+		//esvazia a pilha alocada e continua
 	}
 }
 
@@ -71,12 +73,12 @@ int prioridade(char* expressao, t_pilha* pilha, int counter){
 	}
 }
 
-int infixa_to_posfixa(char* expressao) { /*Incompleta, ainda muita coisa a fazer e mudar o tipo pra retornar str_aux*/
-	char str_aux[303];//teste com str estatica
-	int prio_ant = 0;
-	t_pilha* pilha = aloca_pilha(); 
+int infixa_to_posfixa(char* expressao) { 
+	char str_aux[303]; //String auxiliar onde os valores da expressao serao colocados
+	int prio_ant = 0; // flag para prioridade, para ver se a pilha deve ou não deve ser receber um elemento, ou desempilhar o seu topo
+	t_pilha* pilha = aloca_pilha();  // aqui usamos o cabeçalho feito por mim 'char.h', para alocar uma pilha dinamicamente
 	int i = 0, j = 0, k = 0;
-	while(expressao[k] != '\0'){
+	while(expressao[k] != '\0'){//Checa se a posicao recebeu algum caracter operador ou que modifica a ordem das operacoes
 		if(expressao[i] != '+' && expressao[i] != '-'
 			&&  expressao[i] != '*' &&  expressao[i] != '/' 
 			&&  expressao[i] != '(' &&  expressao[i] != '['
@@ -89,7 +91,7 @@ int infixa_to_posfixa(char* expressao) { /*Incompleta, ainda muita coisa a fazer
 			j++;
 			k++;
 		}
-		//Para os operadores:
+		//condicional para os operandos
 		else{
 			if( (prioridade(expressao, pilha, i) == 1 && pilha_vazia(pilha)) || prioridade(expressao, pilha, i) == 2 && pilha_vazia(pilha) ){
 				push(pilha, expressao[i]);
@@ -139,7 +141,7 @@ int infixa_to_posfixa(char* expressao) { /*Incompleta, ainda muita coisa a fazer
 					}
 				}
 			}
-			//Para os parenteses, colchetes e chaves:
+			//Condicional para os parenteses, colchetes e chaves:
 			if( (prioridade(expressao, pilha, i) == 3 && pilha_vazia(pilha)) || (prioridade(expressao, pilha, i) == 4 && pilha_vazia(pilha)) || (prioridade(expressao, pilha, i) == 5 && pilha_vazia(pilha)) )
 			{
 				push(pilha, expressao[i]);
@@ -173,8 +175,13 @@ int infixa_to_posfixa(char* expressao) { /*Incompleta, ainda muita coisa a fazer
 			}
 		}
 	}
-	str_aux[j] = '\0';
-	printf("Posfixa: %s\n", str_aux);
+	str_aux[j] = '\0'; /*Como a string tem tamanho definido, eh normal a expressao muitas vezes ser menor que a string em si, portanto, se ela for,
+						*a string eh finalizada, e o que foi alocado estaticamente eh devolvido a memoria*/
+	printf("Posfixa: %s\n\n", str_aux);
+	libera_pilha(pilha); //Liberamos a pilha alocada
+	pilha = NULL; //Aqui temos certeza que a pilha nao existe mais
+	free(expressao);//No final liberamos a expressao que alocamos dinamicamente anteriormente
+	return 1;
 }
 
 int modo_calc(){
